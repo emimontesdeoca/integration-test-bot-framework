@@ -72,7 +72,6 @@ namespace IntegrationTestBotFramework
                         /// Conversation update -> add user
                         var conversationUpdateAddUser = new Activity(ActivityTypes.ConversationUpdate)
                         {
-                            Id = "asdasdasdasd",
                             Text = "AddUser",
                             MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedfromId, memberAddedfromName) },
                             Recipient = new ChannelAccount(recipientId, recipientName),
@@ -96,7 +95,6 @@ namespace IntegrationTestBotFramework
                         /// Conversation update -> add bot
                         var conversationUpdateAddBot = new Activity(ActivityTypes.ConversationUpdate)
                         {
-                            Id = "asdasdasdasd",
                             Text = "AddBot",
                             MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedbotId, memberAddedbotName) },
                             Recipient = new ChannelAccount(recipientId, recipientName),
@@ -120,7 +118,6 @@ namespace IntegrationTestBotFramework
                         /// Conversation update -> send message
                         var conversationUpdateSendMessage = new Activity(ActivityTypes.Message)
                         {
-                            Id = "qweqweqweqwe",
                             Text = "Coche",
                             Locale = "es-ES",
                             From = new ChannelAccount(memberAddedfromId, memberAddedfromName),
