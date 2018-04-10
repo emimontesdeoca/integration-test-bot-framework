@@ -72,6 +72,7 @@ namespace IntegrationTestBotFramework
                         /// Conversation update -> add user
                         var conversationUpdateAddUser = new Activity(ActivityTypes.ConversationUpdate)
                         {
+                            Id = "asdasdasdasd",
                             Text = "AddUser",
                             MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedfromId, memberAddedfromName) },
                             Recipient = new ChannelAccount(recipientId, recipientName),
@@ -95,6 +96,7 @@ namespace IntegrationTestBotFramework
                         /// Conversation update -> add bot
                         var conversationUpdateAddBot = new Activity(ActivityTypes.ConversationUpdate)
                         {
+                            Id = "asdasdasdasd",
                             Text = "AddBot",
                             MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedbotId, memberAddedbotName) },
                             Recipient = new ChannelAccount(recipientId, recipientName),
@@ -118,7 +120,9 @@ namespace IntegrationTestBotFramework
                         /// Conversation update -> send message
                         var conversationUpdateSendMessage = new Activity(ActivityTypes.Message)
                         {
+                            Id = "qweqweqweqwe",
                             Text = "Coche",
+                            Locale = "es-ES",
                             From = new ChannelAccount(memberAddedfromId, memberAddedfromName),
                             Recipient = new ChannelAccount(recipientId, recipientName),
                             Conversation = new ConversationAccount(null, conversationId, null),
@@ -142,104 +146,6 @@ namespace IntegrationTestBotFramework
             await Task.CompletedTask;
         }
 
-        [TestMethod]
-        public async Task TestHelloWorld()
-        {
-            //Test("./helloworldTest.json", "http://localhost:3979/api/messages");
 
-            // Bot info
-            var appid = "e32ac4c0-bd36-4507-bde2-08f56c555970";
-            var secret = "jsaifYFW29[_ppSZFE095]{";
-
-            // Endpoints
-            var endpoint = "https://d373235d.ngrok.io/api/messages";
-            var authendpoint = "https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token";
-
-            // Load entries from file
-            var activityText = System.IO.File.ReadAllText(@"C:\jsonBot.json");
-
-            // Deserialize to object
-            var entries = JsonConvert.DeserializeObject<TestEntry>(activityText);
-
-            using (var httpClient = new HttpClient())
-            {
-
-                //foreach (var entry in entries.Entries)
-                //{
-                if (entries.Request.Type == "message")
-                {
-
-                    var activity = new Activity(ActivityTypes.Message)
-                    {
-                        Text = "Test",
-                        From = new ChannelAccount("id", "name"),
-                        Recipient = new ChannelAccount("recipid", "recipname"),
-                        Conversation = new ConversationAccount(false, "id", "name"),
-                        ChannelId = "Test",
-                        ServiceUrl = "http://localhost:50629/" /// What do I have to put here? in the Bot emulator it displays this URL
-
-                    };
-
-                    //// Authorization endpoint
-                    //var auth = new HttpRequestMessage(HttpMethod.Post, authendpoint);
-                    //// Use client id and secret to get token
-                    //var content = "grant_type=client_credentials&client_id=" + appid + "&client_secret=" + secret + "&scope=https%3A%2F%2Fapi.botframework.com%2F.default";
-                    //auth.Content = new StringContent(content, System.Text.UTF8Encoding.UTF8, "application/x-www-form-urlencoded");
-
-                    var token = "";
-
-                    /// POST to authentication
-                    //using (HttpResponseMessage authresponse = await httpClient.SendAsync(auth))
-                    //{
-                    //    /// Get response and deserialize to object
-                    //    var responseActivity = await authresponse.Content.ReadAsAsync<ResponseObject>();
-                    //    token = responseActivity.access_token;
-                    //}
-                    using (var client = new WebClient())
-                    {
-                        var values = new NameValueCollection();
-                        values["grant_type"] = "client_credentials";
-                        values["client_id"] = appid;
-                        values["client_secret"] = secret;
-                        values["scope"] = appid + "/.default";
-
-                        var response = client.UploadValues(authendpoint, values);
-
-                        var responseString = Encoding.Default.GetString(response);
-                        var result = JsonConvert.DeserializeObject<ResponseObject>(responseString);
-                        token = result.access_token;
-                    }
-                    // Request to bot
-                    //var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
-
-                    ////Conversation c = new Conversation("123456", "testbot", "123asd", "testconv", "helo");
-                    //// Bearer with token
-                    //request.Headers.Add("Authorization", "Bearer " + token);
-
-                    //// Activity
-                    //request.Content = new StringContent(JsonConvert.SerializeObject(message), System.Text.UTF8Encoding.UTF8, "application/json");
-
-                    using (var client = new WebClient())
-                    {
-                        client.Headers.Add("Content-Type", "application/json");
-                        client.Headers.Add("Authorization", $"Bearer {token}");
-                        var btmResponse = client.UploadString(endpoint, JsonConvert.SerializeObject(activity));
-                    }
-
-                    // Post to bot
-                    //using (HttpResponseMessage response = await httpClient.SendAsync(request))
-                    //{
-                    //    var responsereceiver = response.Content;
-                    //    //var responseActivity = await response.Content.ReadAsAsync<Activity>();
-                    //    // TODO Esto hacerlo dinámico, leyendo del nodo "assert"
-                    //    //Assert.IsTrue(responseActivity.AsMessageActivity().Text == entries.Response.AsMessageActivity().Text);
-                    //}
-                }
-            }
-            //}
-
-
-            await Task.CompletedTask;
-        }
     }
 }
