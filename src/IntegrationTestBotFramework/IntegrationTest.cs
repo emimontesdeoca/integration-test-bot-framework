@@ -38,7 +38,7 @@ namespace IntegrationTestBotFramework
                         values["grant_type"] = "client_credentials";
                         values["client_id"] = data.ClientId;
                         values["client_secret"] = data.ClientSecret;
-                        values["scope"] = data.ClientId + "/.default";
+                        values["scope"] = "https://graph.microsoft.com/.default";
 
                         /// POST
                         var response = client.UploadValues(data.AuthEndpoint, values);
@@ -70,67 +70,81 @@ namespace IntegrationTestBotFramework
                         #region ADD USER
 
                         /// Conversation update -> add user
-                        var conversationUpdateAddUser = new Activity(ActivityTypes.ConversationUpdate)
-                        {
-                            Text = "AddUser",
-                            MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedfromId, memberAddedfromName) },
-                            Recipient = new ChannelAccount(recipientId, recipientName),
-                            Conversation = new ConversationAccount(null, conversationId, null),
-                            ChannelId = channelId,
-                            ServiceUrl = "http://localhost:56739/" /// What do I have to put here? in the Bot emulator it displays this URL
+                        //var conversationUpdateAddUser = new Activity(ActivityTypes.ConversationUpdate)
+                        //{
+                        //    Text = "AddUser",
+                        //    MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedfromId, memberAddedfromName) },
+                        //    Recipient = new ChannelAccount(recipientId, recipientName),
+                        //    Conversation = new ConversationAccount(null, conversationId, null),
+                        //    ChannelId = channelId,
+                        //    ServiceUrl = "http://localhost:56739/" /// What do I have to put here? in the Bot emulator it displays this URL
 
-                        };
+                        //};
 
-                        client.Headers.Add("Content-Type", "application/json");
-                        client.Headers.Add("Authorization", $"Bearer {token}");
-                        client.UploadString(data.Endpoint, JsonConvert.SerializeObject(conversationUpdateAddUser));
+                        //client.Headers.Add("Content-Type", "application/json");
+                        //client.Headers.Add("Authorization", $"Bearer {token}");
+                        //client.UploadString(data.Endpoint, JsonConvert.SerializeObject(conversationUpdateAddUser));
 
-                        /// Clear header for token
-                        client.Headers.Clear();
+                        ///// Clear header for token
+                        //client.Headers.Clear();
 
                         #endregion
 
                         #region ADD BOT
 
-                        /// Conversation update -> add bot
-                        var conversationUpdateAddBot = new Activity(ActivityTypes.ConversationUpdate)
-                        {
-                            Text = "AddBot",
-                            MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedbotId, memberAddedbotName) },
-                            Recipient = new ChannelAccount(recipientId, recipientName),
-                            Conversation = new ConversationAccount(null, conversationId, null),
-                            ChannelId = channelId,
-                            ServiceUrl = "http://localhost:56739/" /// What do I have to put here? in the Bot emulator it displays this URL
+                        ///// Conversation update -> add bot
+                        //var conversationUpdateAddBot = new Activity(ActivityTypes.ConversationUpdate)
+                        //{
+                        //    Text = "AddBot",
+                        //    MembersAdded = new List<ChannelAccount>() { new ChannelAccount(memberAddedbotId, memberAddedbotName) },
+                        //    Recipient = new ChannelAccount(recipientId, recipientName),
+                        //    Conversation = new ConversationAccount(null, conversationId, null),
+                        //    ChannelId = channelId,
+                        //    ServiceUrl = "http://localhost:56739/" /// What do I have to put here? in the Bot emulator it displays this URL
 
-                        };
+                        //};
+
+                        //client.Headers.Add("Content-Type", "application/json");
+                        //client.Headers.Add("Authorization", $"Bearer {token}");
+                        //client.UploadString(data.Endpoint, JsonConvert.SerializeObject(conversationUpdateAddBot));
+
+                        ///// Clear header for token
+                        //client.Headers.Clear();
+
+                        #endregion
+
+                        #region START CONVERSATION
+
+                        /// Conversation update->start conversation
+                        var conversation = new Conversation(memberAddedfromId, memberAddedbotName, memberAddedfromId, memberAddedfromName, "test");
 
                         client.Headers.Add("Content-Type", "application/json");
                         client.Headers.Add("Authorization", $"Bearer {token}");
-                        client.UploadString(data.Endpoint, JsonConvert.SerializeObject(conversationUpdateAddBot));
 
-                        /// Clear header for token
-                        client.Headers.Clear();
+                        string json = JsonConvert.SerializeObject(conversation);
+                        var responseBotMessage = client.UploadString(@"https://smba.trafficmanager.net/apis/v3/conversations", json);
 
                         #endregion
 
                         #region SEND MESSAGE
 
                         /// Conversation update -> send message
-                        var conversationUpdateSendMessage = new Activity(ActivityTypes.Message)
-                        {
-                            Text = "Coche",
-                            Locale = "es-ES",
-                            From = new ChannelAccount(memberAddedfromId, memberAddedfromName),
-                            Recipient = new ChannelAccount(recipientId, recipientName),
-                            Conversation = new ConversationAccount(null, conversationId, null),
-                            ChannelId = channelId,
-                            ServiceUrl = "http://localhost:56739/" /// What do I have to put here? in the Bot emulator it displays this URL
+                        //var conversationUpdateSendMessage = new Activity(ActivityTypes.Message)
+                        //{
+                        //    Text = "Coche",
+                        //    Locale = "es-ES",
+                        //    From = new ChannelAccount(memberAddedfromId, memberAddedfromName),
+                        //    Recipient = new ChannelAccount(recipientId, recipientName),
+                        //    ReplyToId = memberAddedfromId,
+                        //    Conversation = new ConversationAccount(null, conversationId, null),
+                        //    ChannelId = channelId,
+                        //    ServiceUrl = "http://localhost:56739/" /// What do I have to put here? in the Bot emulator it displays this URL
 
-                        };
+                        //};
 
-                        client.Headers.Add("Content-Type", "application/json");
-                        client.Headers.Add("Authorization", $"Bearer {token}");
-                        var responseBotMessage = client.UploadString(data.Endpoint, JsonConvert.SerializeObject(conversationUpdateSendMessage));
+                        //client.Headers.Add("Content-Type", "application/json");
+                        //client.Headers.Add("Authorization", $"Bearer {token}");
+                        //var responseBotMessage = client.UploadString(data.Endpoint, JsonConvert.SerializeObject(conversationUpdateSendMessage));
 
                         #endregion
 
